@@ -46,3 +46,9 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
     chrome.tabs.update(tab.id, { url: url });
   });
 });
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+  if (changeInfo.url) {
+    processNewURL(changeInfo.url);
+  }
+});
