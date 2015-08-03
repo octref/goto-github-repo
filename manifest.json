@@ -1,0 +1,19 @@
+{
+  "name": "Goto Github Repo",
+  "description" : "Fast access to github repos you have visited",
+  "version": "0.1",
+  "background": {
+    "scripts": [
+      "lodash.min.js",
+      "helper.js",
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "history",
+    "storage",
+    "tabs"
+  ],
+  "omnibox": { "keyword" : "gh" },
+  "manifest_version": 2
+}
