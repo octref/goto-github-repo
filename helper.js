@@ -31,3 +31,12 @@ function buildRepoMap(cb) {
       cb(repoMap);
   });
 }
+
+// After building repoMap, set it in local storage
+function buildAndSetRepoMap() {
+  buildRepoMap(function(repoMap) {
+    chrome.storage.local.set({ repoMap: repoMap }, function() {
+      console.log('RepoMap updated successfully');
+    });
+  });
+}

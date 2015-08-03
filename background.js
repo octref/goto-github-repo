@@ -1,23 +1,11 @@
 var defaultSuggestionURL = '';
 
-chrome.runtime.onStartup.addListener(function() {
-  buildRepoMap(function(repoMap) {
-    chrome.storage.local.set({ repoMap: repoMap }, function() {
-      console.log('RepoMap updated successfully');
-    });
-  });
-});
-
-chrome.runtime.onInstalled.addListener(function() {
-  buildRepoMap(function(repoMap) {
-    chrome.storage.local.set({ repoMap: repoMap }, function() {
-      console.log('RepoMap updated successfully');
-    });
-  });
-});
+chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
+chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
 chrome.omnibox.onInputChanged.addListener(function(keyword, suggest) {
   chrome.storage.local.get('repoMap', function(storageObj) {
+    // Go through repoMap, find suggestions based on keyword
     var repoMap = storageObj.repoMap;
     var suggestions = [];
 
@@ -26,6 +14,7 @@ chrome.omnibox.onInputChanged.addListener(function(keyword, suggest) {
           content: repo.url,
           description: fullName
       };
+      // Put exact match in the front of suggestions
       if (repo.repoName == keyword) {
         suggestions.unshift(suggestion);
       } else if (_.contains(fullName, keyword)) {
@@ -34,12 +23,12 @@ chrome.omnibox.onInputChanged.addListener(function(keyword, suggest) {
     });
 
     // Use the first suggestion as default
-    var defaultSuggestion = {
-      description: '<match>' + suggestions[0].description + '</match>'
-    };
+    var defaultSuggestionDescription = '<match>' + suggestions[0].description + '</match>';
     defaultSuggestionURL = suggestions[0].content;
 
-    chrome.omnibox.setDefaultSuggestion(defaultSuggestion);
+    chrome.omnibox.setDefaultSuggestion({
+      description: defaultSuggestionDescription
+    });
     suggest(_.rest(suggestions));
   });
 });
