@@ -15,5 +15,8 @@
     "tabs"
   ],
   "omnibox": { "keyword" : "gh" },
+  "icons": {
+    "16": "octo.png"
+  },
   "manifest_version": 2
 }
