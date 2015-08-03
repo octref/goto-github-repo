@@ -16,8 +16,8 @@
   ],
   "omnibox": { "keyword" : "gh" },
   "icons": {
-    "128": "logo.png",
-    "16": "octo.png"
+    "128": "images/logo.png",
+    "16": "images/octo.png"
   },
   "manifest_version": 2
 }

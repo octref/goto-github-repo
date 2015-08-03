@@ -1,3 +1,10 @@
+// A list of repos that shouldn't be recorded, such as
+// github.com/blog, github.com/explore, etc
+var inValidOwners = [
+  'blog',
+  'explore'
+]
+
 // Build a hashmap of accessed repos
 function buildRepoMap(cb) {
   chrome.history.search({
@@ -17,7 +24,7 @@ function buildRepoMap(cb) {
                 repoName = paths[2],
                 fullName = owner + '/' + repoName;
 
-            if (!repoMap[fullName]) {
+            if (!repoMap[fullName] && !_.contains(inValidOwners, owner)) {
               repoMap[fullName] = {
                 url: 'https://github.com/' + fullName,
                 owner: owner,
@@ -55,7 +62,7 @@ function processNewURL(url) {
 
       chrome.storage.local.get('repoMap', function(storageObj) {
         var repoMap = storageObj.repoMap;
-        if (!repoMap[fullName]) {
+        if (!repoMap[fullName] && !_.contains(inValidOwners, owner)) {
           repoMap[fullName] = {
             url: 'https://github.com/' + fullName,
             owner: owner,
