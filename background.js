@@ -3,7 +3,9 @@ var defaultSuggestionURL = '';
 chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
 chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
-chrome.omnibox.onInputChanged.addListener(function(keyword, suggest) {
+chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
+  input = input.trim();
+
   chrome.storage.local.get('repoMap', function(storageObj) {
     // Go through repoMap, find suggestions based on keyword
     var repoMap = storageObj.repoMap;
@@ -14,21 +16,40 @@ chrome.omnibox.onInputChanged.addListener(function(keyword, suggest) {
           content: repo.url,
           description: fullName
       };
-      // Put exact match in the front of suggestions
-      if (repo.repoName == keyword) {
-        suggestions.unshift(suggestion);
-      } else if (_.contains(fullName, keyword)) {
-        suggestions.push(suggestion);
+      // See if we have multiple or just a single keyword
+      if (input.split(' ').length == 1 && input != '') {
+        var keyword = input;
+
+        // Put exact match in the front of suggestions
+        if (repo.repoName == keyword) {
+          suggestions.unshift(suggestion);
+        } else if (_.contains(fullName, keyword)) {
+          suggestions.push(suggestion);
+        }
+      }
+      // Multiple keywords
+      else {
+        var keywords = input.split(' ');
+        var inFullName = function(keyword) {
+          return _.contains(fullName, keyword);
+        };
+
+        if (_.all(keywords, inFullName)) {
+          suggestions.push(suggestion);
+        }
       }
     });
 
     // Use the first suggestion as default
-    var defaultSuggestionDescription = '<match>' + suggestions[0].description + '</match>';
-    defaultSuggestionURL = suggestions[0].content;
+    if (suggestions.length > 0) {
+      var defaultSuggestionDescription = '<match>' + suggestions[0].description + '</match>';
+      defaultSuggestionURL = suggestions[0].content;
 
-    chrome.omnibox.setDefaultSuggestion({
-      description: defaultSuggestionDescription
-    });
+      chrome.omnibox.setDefaultSuggestion({
+        description: defaultSuggestionDescription
+      });
+    }
+
     suggest(_.rest(suggestions));
   });
 });
