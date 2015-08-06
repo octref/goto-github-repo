@@ -1,9 +1,12 @@
 ## A Chrome extension to `goto` github repos
-Record github repo pages you've visited, and let you easily access them
-using Chrome omnibox.
+Access github repos you've visited (browser history) from Chrome Omnibox.
+
+## Sreenshot
+![promo](http://i.imgur.com/YFUaklk.png)
 
 ## Usage
-Load it in `chrome://extensions`, type `gh tab` in URL bar, and enter keyword to search.
+Install it from [Chrome Store](https://chrome.google.com/webstore/detail/goto-github-repo/jdjgledckgjldgndcmjjakfjmikopghp).  
+Type `gh tab` in URL bar, and enter keyword to search.
 
 ## License
 MIT
