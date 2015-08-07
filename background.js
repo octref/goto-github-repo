@@ -1,7 +1,7 @@
 var defaultSuggestionURL = '';
 
-chrome.runtime.onStartup.addListener(buildOrLoadRepoMap);
-chrome.runtime.onInstalled.addListener(buildOrLoadRepoMap);
+chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
+chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
 chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
   input = input.trim();
@@ -41,14 +41,20 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
     });
 
     // Use the first suggestion as default
+    var defaultSuggestionDescription;
     if (suggestions.length > 0) {
-      var defaultSuggestionDescription = '<match>' + suggestions[0].description + '</match>';
+      defaultSuggestionDescription = '<match>' + suggestions[0].description + '</match>';
       defaultSuggestionURL = suggestions[0].content;
 
-      chrome.omnibox.setDefaultSuggestion({
-        description: defaultSuggestionDescription
-      });
+    } else {
+      defaultSuggestionDescription = '<match>No match found. Search github with "' +
+                                     input + '"</match>';
+      defaultSuggestionURL = 'https://github.com/search?q=' + input.replace(' ', '+');
     }
+
+    chrome.omnibox.setDefaultSuggestion({
+      description: defaultSuggestionDescription
+    });
 
     suggest(_.rest(suggestions));
   });
