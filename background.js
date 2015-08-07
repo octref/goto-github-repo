@@ -1,7 +1,7 @@
 var defaultSuggestionURL = '';
 
-chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
-chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
+chrome.runtime.onStartup.addListener(buildOrLoadRepoMap);
+chrome.runtime.onInstalled.addListener(buildOrLoadRepoMap);
 
 chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
   input = input.trim();
