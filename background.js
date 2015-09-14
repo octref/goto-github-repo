@@ -4,7 +4,7 @@ chrome.runtime.onStartup.addListener(buildAndSetRepoMap);
 chrome.runtime.onInstalled.addListener(buildAndSetRepoMap);
 
 chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
-  input = input.trim();
+  input = input.trim().toLowerCase();
 
   chrome.storage.local.get('repoMap', function(storageObj) {
     // Go through repoMap, find suggestions based on keyword
@@ -17,13 +17,14 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
           description: fullName
       };
       // See if we have multiple or just a single keyword
+      // Single keyword
       if (input.split(' ').length == 1 && input != '') {
         var keyword = input;
 
         // Put exact match in the front of suggestions
         if (repo.repoName == keyword) {
           suggestions.unshift(suggestion);
-        } else if (_.contains(fullName, keyword)) {
+        } else if (_.contains(fullName.toLowerCase(), keyword)) {
           suggestions.push(suggestion);
         }
       }
@@ -31,7 +32,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
       else {
         var keywords = input.split(' ');
         var inFullName = function(keyword) {
-          return _.contains(fullName, keyword);
+          return _.contains(fullName.toLowerCase(), keyword);
         };
 
         if (_.all(keywords, inFullName)) {
