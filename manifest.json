@@ -1,7 +1,7 @@
 {
   "name": "Goto Github Repo",
   "description" : "Fast access to github repos you have visited",
-  "version": "0.3",
+  "version": "0.4.1",
   "background": {
     "scripts": [
       "lodash.min.js",
