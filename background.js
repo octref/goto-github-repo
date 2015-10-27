@@ -16,6 +16,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
           content: repo.url,
           description: fullName
       };
+
       // See if we have multiple or just a single keyword
       // Single keyword
       if (input.split(' ').length == 1 && input != '') {
@@ -62,13 +63,7 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
 });
 
 chrome.omnibox.onInputEntered.addListener(function(input) {
-  var url;
-
-  if (_.contains(input, '/')) {
-    url = input;
-  } else {
-    url = defaultSuggestionURL;
-  }
+  var url = defaultSuggestionURL;
 
   chrome.tabs.query({ highlighted: true }, function(tab) {
     chrome.tabs.update(tab.id, { url: url });
