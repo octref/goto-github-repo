@@ -10,6 +10,7 @@ Install it from [Chrome Store](https://chrome.google.com/webstore/detail/goto-gi
 Type `gh tab` in URL bar, and enter keyword to search.
 
 ## Update
+- 0.4.2: Fix selecting non-default option going to wrong URL bug
 - 0.4.1: Fix slash bug.
 
 ## License
