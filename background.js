@@ -63,7 +63,14 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
 });
 
 chrome.omnibox.onInputEntered.addListener(function(input) {
-  var url = defaultSuggestionURL;
+  var url; 
+
+  // If input is a valid Github URL, the user has selected something else than the default option
+  if (_.startsWith(input, 'https://github.com/')) {
+    url = input
+  } else {
+    url = defaultSuggestionURL;
+  }
 
   chrome.tabs.query({ highlighted: true }, function(tab) {
     chrome.tabs.update(tab.id, { url: url });
