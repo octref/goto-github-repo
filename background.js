@@ -11,27 +11,35 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
     var repoMap = storageObj.repoMap;
     var suggestions = [];
 
-    _.forEach(repoMap, function(repo, fullName) {
-      var suggestion = {
+    // See if we have multiple or just a single keyword
+    // Single keyword
+    if (input.split(' ').length == 1 && input != '') {
+      var keyword = input.trim().toLowerCase();
+
+      _.each(repoMap, function(repo, fullName) {
+        var suggestion = {
           content: repo.url,
           description: fullName
-      };
-
-      // See if we have multiple or just a single keyword
-      // Single keyword
-      if (input.split(' ').length == 1 && input != '') {
-        var keyword = input;
+        };
 
         // Put exact match in the front of suggestions
-        if (repo.repoName == keyword) {
+        if (repo.repoName.toLowerCase() == keyword) {
           suggestions.unshift(suggestion);
         } else if (_.contains(fullName.toLowerCase(), keyword)) {
           suggestions.push(suggestion);
         }
-      }
-      // Multiple keywords
-      else {
-        var keywords = input.split(' ');
+      });
+    }
+    // Multiple keywords
+    else {
+      var keywords = input.trim().toLowerCase().split(' ');
+
+      _.each(repoMap, function(repo, fullName) {
+        var suggestion = {
+          content: repo.url,
+          description: fullName
+        };
+
         var inFullName = function(keyword) {
           return _.contains(fullName.toLowerCase(), keyword);
         };
@@ -39,8 +47,8 @@ chrome.omnibox.onInputChanged.addListener(function(input, suggest) {
         if (_.all(keywords, inFullName)) {
           suggestions.push(suggestion);
         }
-      }
-    });
+      });
+    }
 
     // Use the first suggestion as default
     var defaultSuggestionDescription;
@@ -67,7 +75,7 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
 
   // If input is a valid Github URL, the user has selected something else than the default option
   if (_.startsWith(input, 'https://github.com/')) {
-    url = input
+    url = input;
   } else {
     url = defaultSuggestionURL;
   }
