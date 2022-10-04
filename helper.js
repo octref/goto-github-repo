@@ -7,7 +7,26 @@ var inValidOwners = [
   'trending',
   'stars',
   'contact',
-  'about'
+  'about',
+  'orgs',
+  'codespaces',
+  'settings',
+  'marketplace',
+  'pulls',
+  'issues',
+  'notifications',
+  'account',
+  'discussions',
+  'sponsors',
+  'login',
+  'codesearch',
+  'enterprise',
+  'enterprises',
+  'security',
+  'team',
+  'customer-stories',
+  'readme',
+  'pricing'
 ]
 
 // Build a hashmap of accessed repos
